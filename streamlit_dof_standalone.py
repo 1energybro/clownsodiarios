@@ -321,10 +321,41 @@ def main():
         
         # Botón para exportar resultados finales
         if st.button("📊 Exportar Catálogo Final"):
+            # Generar CSV en memoria
+            conn = sqlite3.connect(classifier.db_path)
+            df = pd.read_sql_query('''
+                SELECT 
+                    id,
+                    original_text,
+                    cleaned_text,
+                    frequency,
+                    COALESCE(category, 'SIN_CLASIFICAR') as category,
+                    subcategory,
+                    is_valid,
+                    notes,
+                    created_at,
+                    updated_at
+                FROM headers 
+                ORDER BY 
+                    CASE WHEN category IS NULL THEN 1 ELSE 0 END,
+                    frequency DESC, 
+                    category, 
+                    cleaned_text
+            ''', conn)
+            conn.close()
+            
+            # Convertir a CSV
+            csv_data = df.to_csv(index=False, encoding='utf-8-sig')
             filename = f"catalogo_dof_final_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
-            count = classifier.export_catalog(filename)
-            if count > 0:
-                st.success(f"✅ Catálogo exportado: {filename} ({count} registros)")
+            
+            # Botón de descarga
+            st.download_button(
+                label="⬇️ Descargar Catálogo Final",
+                data=csv_data,
+                file_name=filename,
+                mime="text/csv"
+            )
+            st.success(f"✅ Catálogo final listo para descargar ({len(df)} registros)")
             
                 # Mostrar resumen final
                 st.header("📋 Resumen Final")
@@ -454,9 +485,41 @@ def main():
             with col2:
                 if st.button("💾 Exportar Progreso"):
                     filename = f"progreso_dof_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
-                    count = classifier.export_catalog(filename)
-                    if count > 0:
-                        st.success(f"✅ Progreso exportado: {filename} ({count} registros)")
+                    
+                    # Generar CSV en memoria
+                    conn = sqlite3.connect(classifier.db_path)
+                    df = pd.read_sql_query('''
+                        SELECT 
+                            id,
+                            original_text,
+                            cleaned_text,
+                            frequency,
+                            COALESCE(category, 'SIN_CLASIFICAR') as category,
+                            subcategory,
+                            is_valid,
+                            notes,
+                            created_at,
+                            updated_at
+                        FROM headers 
+                        ORDER BY 
+                            CASE WHEN category IS NULL THEN 1 ELSE 0 END,
+                            frequency DESC, 
+                            category, 
+                            cleaned_text
+                    ''', conn)
+                    conn.close()
+                    
+                    # Convertir a CSV
+                    csv_data = df.to_csv(index=False, encoding='utf-8-sig')
+                    
+                    # Botón de descarga
+                    st.download_button(
+                        label="⬇️ Descargar CSV",
+                        data=csv_data,
+                        file_name=filename,
+                        mime="text/csv"
+                    )
+                    st.success(f"✅ Archivo listo para descargar ({len(df)} registros)")
             
             with col3:
                 if st.button("⏭️ Saltar Lote"):
