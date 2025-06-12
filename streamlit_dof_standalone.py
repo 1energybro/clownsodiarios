@@ -357,10 +357,10 @@ def main():
             )
             st.success(f"✅ Catálogo final listo para descargar ({len(df)} registros)")
             
-                # Mostrar resumen final
-                st.header("📋 Resumen Final")
-                final_stats = stats['stats']
-                st.dataframe(final_stats, use_container_width=True)
+            # Mostrar resumen final
+            st.header("📋 Resumen Final")
+            final_stats = stats['stats']
+            st.dataframe(final_stats, use_container_width=True)
     
     else:
         # Obtener lote actual
@@ -484,8 +484,6 @@ def main():
             
             with col2:
                 if st.button("💾 Exportar Progreso"):
-                    filename = f"progreso_dof_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
-                    
                     # Generar CSV en memoria
                     conn = sqlite3.connect(classifier.db_path)
                     df = pd.read_sql_query('''
@@ -511,13 +509,15 @@ def main():
                     
                     # Convertir a CSV
                     csv_data = df.to_csv(index=False, encoding='utf-8-sig')
+                    filename = f"progreso_dof_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
                     
                     # Botón de descarga
                     st.download_button(
                         label="⬇️ Descargar CSV",
                         data=csv_data,
                         file_name=filename,
-                        mime="text/csv"
+                        mime="text/csv",
+                        key="download_progress"
                     )
                     st.success(f"✅ Archivo listo para descargar ({len(df)} registros)")
             
