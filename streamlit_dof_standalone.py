@@ -11,93 +11,100 @@ import os
 # Configuración de la página
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Princess+Sofia&family=Quicksand:wght@400;700&display=swap');
     body, .stApp {
-        background: #0f1816 !important;
-        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
-        color: #00ff41;
+        background: linear-gradient(135deg, #f8e1ff 0%, #d0f0c0 100%) !important;
+        font-family: 'Quicksand', cursive !important;
+        color: #5d3a00;
     }
     .header-card {
-        background: linear-gradient(135deg, #0f1816 80%, #1a2d1a 100%);
-        border-radius: 12px;
-        border: 2px solid #00ff41;
-        box-shadow: 0 2px 12px #00ff4133;
-        padding: 22px;
-        margin: 14px 0;
-        font-family: 'Share Tech Mono', 'Consolas', monospace;
-        color: #00ff41;
+        background: rgba(255,255,255,0.85);
+        border-radius: 18px;
+        border: 3px solid #e0b3ff;
+        box-shadow: 0 4px 24px #caa6e8aa;
+        padding: 28px;
+        margin: 18px 0;
+        font-family: 'Princess Sofia', cursive;
+        color: #7b3f00;
         letter-spacing: 1px;
+        background-image: url('https://cdn.pixabay.com/photo/2017/01/31/13/14/fairy-tale-2022817_1280.png');
+        background-size: 120px;
+        background-repeat: no-repeat;
+        background-position: right bottom;
     }
     .classification-success {
-        background: #1a2d1a;
-        color: #00ff41;
-        border: 2px dashed #00ff41;
-        border-radius: 7px;
-        font-family: 'Share Tech Mono', 'Consolas', monospace;
-        font-size: 1.1em;
+        background: #f9e6ff;
+        color: #7b3f00;
+        border: 2px dashed #e0b3ff;
+        border-radius: 12px;
+        font-family: 'Princess Sofia', cursive;
+        font-size: 1.2em;
         letter-spacing: 1px;
+        box-shadow: 0 2px 8px #e0b3ff44;
     }
     .stats-card {
-        background: #0f1816;
-        border: 2px solid #00ff41;
-        border-radius: 10px;
-        color: #00ff41;
-        font-family: 'Share Tech Mono', 'Consolas', monospace;
+        background: #fff8f0;
+        border: 2px solid #e0b3ff;
+        border-radius: 14px;
+        color: #7b3f00;
+        font-family: 'Quicksand', cursive;
     }
     .frequency-badge {
-        background: #00ff41;
-        color: #0f1816;
-        border-radius: 14px;
-        padding: 4px 12px;
-        font-size: 14px;
+        background: #e0b3ff;
+        color: #7b3f00;
+        border-radius: 18px;
+        padding: 6px 18px;
+        font-size: 16px;
         font-weight: bold;
-        font-family: 'Share Tech Mono', 'Consolas', monospace;
-        border: 1.5px solid #00ff41;
-        box-shadow: 1px 1px 2px #00ff4133;
+        font-family: 'Quicksand', cursive;
+        border: 2px solid #e0b3ff;
+        box-shadow: 1px 1px 6px #e0b3ff44;
         letter-spacing: 1px;
     }
     .stButton>button {
-        background: #00ff41 !important;
-        color: #0f1816 !important;
-        border-radius: 8px !important;
-        border: 2px solid #00ff41 !important;
-        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
-        font-size: 1.1em !important;
-        box-shadow: 1px 1px 6px #00ff4133;
+        background: linear-gradient(90deg, #e0b3ff 60%, #f9e6ff 100%) !important;
+        color: #7b3f00 !important;
+        border-radius: 12px !important;
+        border: 2px solid #e0b3ff !important;
+        font-family: 'Princess Sofia', cursive !important;
+        font-size: 1.2em !important;
+        box-shadow: 1px 1px 8px #e0b3ff44;
         letter-spacing: 1px;
         transition: background 0.2s;
     }
     .stButton>button:hover {
-        background: #1a2d1a !important;
-        color: #00ff41 !important;
-        border: 2px solid #00ff41 !important;
+        background: #f9e6ff !important;
+        color: #e0b3ff !important;
+        border: 2px solid #e0b3ff !important;
     }
     .stMetric {
-        background: #0f1816;
-        border-radius: 8px;
-        border: 1.5px solid #00ff41;
-        color: #00ff41;
-        font-family: 'Share Tech Mono', 'Consolas', monospace;
+        background: #fff8f0;
+        border-radius: 12px;
+        border: 2px solid #e0b3ff;
+        color: #7b3f00;
+        font-family: 'Quicksand', cursive;
     }
     .stProgress > div > div > div > div {
-        background-color: #00ff41 !important;
+        background-color: #e0b3ff !important;
     }
     h1, h2, h3, h4, h5, h6 {
-        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
-        color: #00ff41 !important;
-        text-shadow: 0 0 8px #00ff41cc;
+        font-family: 'Princess Sofia', cursive !important;
+        color: #a259c6 !important;
+        text-shadow: 0 0 12px #e0b3ffcc;
         letter-spacing: 2px;
     }
     .stSidebar {
-        background: #1a2d1a !important;
-        color: #00ff41 !important;
-        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
+        background: linear-gradient(135deg, #f9e6ff 0%, #e0b3ff 100%) !important;
+        color: #7b3f00 !important;
+        font-family: 'Quicksand', cursive !important;
+        border-radius: 0 24px 24px 0;
+        border-right: 3px solid #e0b3ff;
     }
     .stInfo, .stAlert, .stWarning {
-        background: #1a2d1a !important;
-        color: #00ff41 !important;
-        border: 1.5px solid #00ff41 !important;
-        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
+        background: #f9e6ff !important;
+        color: #7b3f00 !important;
+        border: 2px solid #e0b3ff !important;
+        font-family: 'Quicksand', cursive !important;
     }
 </style>
 """, unsafe_allow_html=True)
