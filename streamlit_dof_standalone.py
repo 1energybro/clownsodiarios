@@ -19,34 +19,79 @@ st.set_page_config(
 # CSS personalizado
 st.markdown("""
 <style>
-    .header-card {
-        background-color: #f0f2f6;
-        padding: 20px;
-        border-radius: 10px;
-        border-left: 5px solid #1f77b4;
-        margin: 10px 0;
-    }
-    .classification-success {
-        background-color: #d4edda;
-        color: #155724;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid #c3e6cb;
-    }
-    .stats-card {
-        background-color: #e9ecef;
-        padding: 15px;
-        border-radius: 8px;
-        text-align: center;
-    }
-    .frequency-badge {
-        background-color: #007bff;
-        color: white;
-        padding: 3px 8px;
-        border-radius: 12px;
-        font-size: 12px;
-        font-weight: bold;
-    }
+body, .stApp {
+    background: #f5ecd7 !important;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: #4b3e2e;
+}
+.header-card {
+    background: linear-gradient(135deg, #f7e7ce 80%, #e2c290 100%);
+    border-radius: 12px;
+    border: 3px solid #bfa77a;
+    box-shadow: 0 2px 8px #bfa77a33;
+    padding: 22px;
+    margin: 14px 0;
+    font-family: 'Georgia', serif;
+}
+.classification-success {
+    background: #e2c290;
+    color: #4b3e2e;
+    border: 2px dashed #bfa77a;
+    border-radius: 7px;
+    font-family: 'Georgia', serif;
+}
+.stats-card {
+    background: #f7e7ce;
+    border: 2px solid #bfa77a;
+    border-radius: 10px;
+    color: #4b3e2e;
+    font-family: 'Georgia', serif;
+}
+.frequency-badge {
+    background: #bfa77a;
+    color: #fffbe6;
+    border-radius: 14px;
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    font-family: 'Georgia', serif;
+    border: 1px solid #a68b5b;
+    box-shadow: 1px 1px 2px #bfa77a55;
+}
+.stButton>button {
+    background: #bfa77a !important;
+    color: #fffbe6 !important;
+    border-radius: 8px !important;
+    border: 2px solid #a68b5b !important;
+    font-family: 'Georgia', serif !important;
+    font-size: 1.1em !important;
+    box-shadow: 1px 1px 4px #bfa77a33;
+}
+.stButton>button:hover {
+    background: #a68b5b !important;
+    color: #fffbe6 !important;
+    border: 2px solid #4b3e2e !important;
+}
+.stMetric {
+    background: #f7e7ce;
+    border-radius: 8px;
+    border: 1px solid #bfa77a;
+    color: #4b3e2e;
+    font-family: 'Georgia', serif;
+}
+.stProgress > div > div > div > div {
+    background-color: #bfa77a !important;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Georgia', serif;
+    color: #4b3e2e;
+    text-shadow: 1px 1px 0 #fffbe6;
+}
+.stSidebar {
+    background: #e2c290 !important;
+    color: #4b3e2e !important;
+    font-family: 'Georgia', serif !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -321,46 +366,15 @@ def main():
         
         # Botón para exportar resultados finales
         if st.button("📊 Exportar Catálogo Final"):
-            # Generar CSV en memoria
-            conn = sqlite3.connect(classifier.db_path)
-            df = pd.read_sql_query('''
-                SELECT 
-                    id,
-                    original_text,
-                    cleaned_text,
-                    frequency,
-                    COALESCE(category, 'SIN_CLASIFICAR') as category,
-                    subcategory,
-                    is_valid,
-                    notes,
-                    created_at,
-                    updated_at
-                FROM headers 
-                ORDER BY 
-                    CASE WHEN category IS NULL THEN 1 ELSE 0 END,
-                    frequency DESC, 
-                    category, 
-                    cleaned_text
-            ''', conn)
-            conn.close()
-            
-            # Convertir a CSV
-            csv_data = df.to_csv(index=False, encoding='utf-8-sig')
             filename = f"catalogo_dof_final_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
+            count = classifier.export_catalog(filename)
+            if count > 0:
+                st.success(f"✅ Catálogo exportado: {filename} ({count} registros)")
             
-            # Botón de descarga
-            st.download_button(
-                label="⬇️ Descargar Catálogo Final",
-                data=csv_data,
-                file_name=filename,
-                mime="text/csv"
-            )
-            st.success(f"✅ Catálogo final listo para descargar ({len(df)} registros)")
-            
-            # Mostrar resumen final
-            st.header("📋 Resumen Final")
-            final_stats = stats['stats']
-            st.dataframe(final_stats, use_container_width=True)
+                # Mostrar resumen final
+                st.header("📋 Resumen Final")
+                final_stats = stats['stats']
+                st.dataframe(final_stats, use_container_width=True)
     
     else:
         # Obtener lote actual
@@ -484,42 +498,10 @@ def main():
             
             with col2:
                 if st.button("💾 Exportar Progreso"):
-                    # Generar CSV en memoria
-                    conn = sqlite3.connect(classifier.db_path)
-                    df = pd.read_sql_query('''
-                        SELECT 
-                            id,
-                            original_text,
-                            cleaned_text,
-                            frequency,
-                            COALESCE(category, 'SIN_CLASIFICAR') as category,
-                            subcategory,
-                            is_valid,
-                            notes,
-                            created_at,
-                            updated_at
-                        FROM headers 
-                        ORDER BY 
-                            CASE WHEN category IS NULL THEN 1 ELSE 0 END,
-                            frequency DESC, 
-                            category, 
-                            cleaned_text
-                    ''', conn)
-                    conn.close()
-                    
-                    # Convertir a CSV
-                    csv_data = df.to_csv(index=False, encoding='utf-8-sig')
                     filename = f"progreso_dof_{datetime.now().strftime('%Y%m%d_%H%M')}.csv"
-                    
-                    # Botón de descarga
-                    st.download_button(
-                        label="⬇️ Descargar CSV",
-                        data=csv_data,
-                        file_name=filename,
-                        mime="text/csv",
-                        key="download_progress"
-                    )
-                    st.success(f"✅ Archivo listo para descargar ({len(df)} registros)")
+                    count = classifier.export_catalog(filename)
+                    if count > 0:
+                        st.success(f"✅ Progreso exportado: {filename} ({count} registros)")
             
             with col3:
                 if st.button("⏭️ Saltar Lote"):
