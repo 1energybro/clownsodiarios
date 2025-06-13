@@ -9,89 +9,96 @@ from datetime import datetime
 import os
 
 # Configuración de la página
-st.set_page_config(
-    page_title="Clasificador DOF",
-    page_icon="🏛️",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# CSS personalizado
 st.markdown("""
 <style>
-body, .stApp {
-    background: #f5ecd7 !important;
-    font-family: 'Georgia', 'Times New Roman', serif;
-    color: #4b3e2e;
-}
-.header-card {
-    background: linear-gradient(135deg, #f7e7ce 80%, #e2c290 100%);
-    border-radius: 12px;
-    border: 3px solid #bfa77a;
-    box-shadow: 0 2px 8px #bfa77a33;
-    padding: 22px;
-    margin: 14px 0;
-    font-family: 'Georgia', serif;
-}
-.classification-success {
-    background: #e2c290;
-    color: #4b3e2e;
-    border: 2px dashed #bfa77a;
-    border-radius: 7px;
-    font-family: 'Georgia', serif;
-}
-.stats-card {
-    background: #f7e7ce;
-    border: 2px solid #bfa77a;
-    border-radius: 10px;
-    color: #4b3e2e;
-    font-family: 'Georgia', serif;
-}
-.frequency-badge {
-    background: #bfa77a;
-    color: #fffbe6;
-    border-radius: 14px;
-    padding: 4px 12px;
-    font-size: 13px;
-    font-weight: bold;
-    font-family: 'Georgia', serif;
-    border: 1px solid #a68b5b;
-    box-shadow: 1px 1px 2px #bfa77a55;
-}
-.stButton>button {
-    background: #bfa77a !important;
-    color: #fffbe6 !important;
-    border-radius: 8px !important;
-    border: 2px solid #a68b5b !important;
-    font-family: 'Georgia', serif !important;
-    font-size: 1.1em !important;
-    box-shadow: 1px 1px 4px #bfa77a33;
-}
-.stButton>button:hover {
-    background: #a68b5b !important;
-    color: #fffbe6 !important;
-    border: 2px solid #4b3e2e !important;
-}
-.stMetric {
-    background: #f7e7ce;
-    border-radius: 8px;
-    border: 1px solid #bfa77a;
-    color: #4b3e2e;
-    font-family: 'Georgia', serif;
-}
-.stProgress > div > div > div > div {
-    background-color: #bfa77a !important;
-}
-h1, h2, h3, h4, h5, h6 {
-    font-family: 'Georgia', serif;
-    color: #4b3e2e;
-    text-shadow: 1px 1px 0 #fffbe6;
-}
-.stSidebar {
-    background: #e2c290 !important;
-    color: #4b3e2e !important;
-    font-family: 'Georgia', serif !important;
-}
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+    body, .stApp {
+        background: #0f1816 !important;
+        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
+        color: #00ff41;
+    }
+    .header-card {
+        background: linear-gradient(135deg, #0f1816 80%, #1a2d1a 100%);
+        border-radius: 12px;
+        border: 2px solid #00ff41;
+        box-shadow: 0 2px 12px #00ff4133;
+        padding: 22px;
+        margin: 14px 0;
+        font-family: 'Share Tech Mono', 'Consolas', monospace;
+        color: #00ff41;
+        letter-spacing: 1px;
+    }
+    .classification-success {
+        background: #1a2d1a;
+        color: #00ff41;
+        border: 2px dashed #00ff41;
+        border-radius: 7px;
+        font-family: 'Share Tech Mono', 'Consolas', monospace;
+        font-size: 1.1em;
+        letter-spacing: 1px;
+    }
+    .stats-card {
+        background: #0f1816;
+        border: 2px solid #00ff41;
+        border-radius: 10px;
+        color: #00ff41;
+        font-family: 'Share Tech Mono', 'Consolas', monospace;
+    }
+    .frequency-badge {
+        background: #00ff41;
+        color: #0f1816;
+        border-radius: 14px;
+        padding: 4px 12px;
+        font-size: 14px;
+        font-weight: bold;
+        font-family: 'Share Tech Mono', 'Consolas', monospace;
+        border: 1.5px solid #00ff41;
+        box-shadow: 1px 1px 2px #00ff4133;
+        letter-spacing: 1px;
+    }
+    .stButton>button {
+        background: #00ff41 !important;
+        color: #0f1816 !important;
+        border-radius: 8px !important;
+        border: 2px solid #00ff41 !important;
+        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
+        font-size: 1.1em !important;
+        box-shadow: 1px 1px 6px #00ff4133;
+        letter-spacing: 1px;
+        transition: background 0.2s;
+    }
+    .stButton>button:hover {
+        background: #1a2d1a !important;
+        color: #00ff41 !important;
+        border: 2px solid #00ff41 !important;
+    }
+    .stMetric {
+        background: #0f1816;
+        border-radius: 8px;
+        border: 1.5px solid #00ff41;
+        color: #00ff41;
+        font-family: 'Share Tech Mono', 'Consolas', monospace;
+    }
+    .stProgress > div > div > div > div {
+        background-color: #00ff41 !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
+        color: #00ff41 !important;
+        text-shadow: 0 0 8px #00ff41cc;
+        letter-spacing: 2px;
+    }
+    .stSidebar {
+        background: #1a2d1a !important;
+        color: #00ff41 !important;
+        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
+    }
+    .stInfo, .stAlert, .stWarning {
+        background: #1a2d1a !important;
+        color: #00ff41 !important;
+        border: 1.5px solid #00ff41 !important;
+        font-family: 'Share Tech Mono', 'Consolas', monospace !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
